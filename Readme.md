@@ -34,7 +34,7 @@ ssh-rsa 부터 끝까지 복사한다.
 ``` bash
 cat id_rsa.pub
 ```
-** setting -> SSH and GPG Keys -> New  key -> Add Key ** 로 키를 추가한다. 깃허브의 SSH 주소만 알고 있으면 로그인 정보를 입력하지 않고도 그 저장소에 접속할 수 있다. 
+**setting -> SSH and GPG Keys -> New  key -> Add Key** 로 키를 추가한다. 깃허브의 SSH 주소만 알고 있으면 로그인 정보를 입력하지 않고도 그 저장소에 접속할 수 있다. 
 
 ## 파일 상태
 
