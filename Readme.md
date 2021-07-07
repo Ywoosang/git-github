@@ -39,11 +39,11 @@ cat id_rsa.pub
 ## 파일 상태
 
 untracked unmodified modified staged
-
-untracked : 처음 만들어 올리지 않은 상태
-staged : add 명령어로 스테이지에 올라간 상태 
-unmodified : 커밋해서 변경 내용이 없는 상태 
-modified : 코드를 변경 
+  
+untracked : 처음 만들어 올리지 않은 상태    
+staged : add 명령어로 스테이지에 올라간 상태  
+unmodified : 커밋해서 변경 내용이 없는 상태  
+modified : 커밋 후 코드를 변경한 상태  
 
 보통 untracked 상태에서 처음 add 하고 그 다음 add 와 commit 을 반복한다. 
 
@@ -74,7 +74,7 @@ git checkout <branch-name>
 HEAD 는 현재 작업트리가 어떤 버전을 기반으로 작업중인지 가리킨다. 작업 트리란 현재 작업중인 폴더를 의미한다. 작업트리에서 변경 내용을 add 하고 commit 한다.
 다음 명령어로 커밋 내역을 확인해 보자
 ```bash
-
+git long --oneline
 ```
 
 ex) git log --oneline 으로 HEAD 를 조회해보았을때 다음과 같이 나타났다고 하자.
