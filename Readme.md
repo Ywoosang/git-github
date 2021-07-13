@@ -3,6 +3,25 @@
 - 협업을 위해 필요로 하는 git 과 github 개념을 빠르게 정리한 저장소입니다.
 - 추가로 정리가 필요한 개념이 있다면 **issue** 로 남겨 주세요. 
  
+- [origin,remote 개념](#origin-remote---)
+- [SSH 원격 접속](#ssh------)
+- [파일 상태](#-----)
+- [브랜치 기본](#------)
+  * [브랜치 만들기 및 이동](#------------)
+  * [remote 에서 브랜치 받아오기](#remote------------)
+  * [HEAD](#head)
+  * [로그 조회](#-----)
+  * [merge](#merge)
+  * [브랜치 삭제](#------)
+- [브랜치 종류](#------)
+  * [Main branch](#main-branch)
+  * [Supporting branch](#supporting-branch)
+- [clone, push, pull](#clone--push--pull)
+  * [브랜치 목록 조회](#---------)
+  * [clone](#clone)
+  * [push](#push)
+  * [pull](#pull)
+  * [remote 에 업로드한 파일 삭제](#remote-------------)
 
 ## origin,remote 개념
 
@@ -47,13 +66,15 @@ modified : 커밋 후 코드를 변경한 상태
 
 보통 untracked 상태에서 처음 add 하고 그 다음 add 와 commit 을 반복한다. 
 
-## 브랜치
+## 브랜치 기본
+
 
 개별 브랜치를 만들어 독립적인 내용을 작업한다. 
 
 **브랜치 분기 -> 작업 -> 병합** 
 
 마스터브랜치에서 분기하기 전 적어도 하나 이상 커밋이 존재해야 한다. 
+
 
 ### 브랜치 만들기 및 이동
 ```bash
@@ -68,6 +89,18 @@ git checkout <branch-name>
 ```
 
 브랜치 내에서 작업 add, commit 후 병합한다.
+
+### remote 에서 브랜치 받아오기
+
+원격 저장소에서 작업을 한 이후에 로컬에 받아오기 위해서 git pull 명령을 사용한다. 하지만 원격 저장소에서 새로운 Branch를 생성하였을 경우에는 git pull 명령을 통해서도 Branch 정보를 받아올 수 없다. 이 경우에는 git pull이 아닌 다음의 명령을 수행한다.
+```bash
+git remote update
+``` 
+이때 원하는 저장소의 브랜치만 가져오고 싶다면 `-t` 옵션과 원격 저장소의 branch 이름을 입력한다. 로컬에 동일한 이름의 브랜치가 생성되고 해당 브랜치로 checkout 된다. 
+
+```bash
+git checkout -t <origin-branch-name>
+```
 
 ### HEAD 
 
@@ -138,6 +171,55 @@ git merge --abort
 git branch -D <branch-name>
 ```
 
+## 브랜치 종류
+
+### Main branch
+
+메인 브랜치에는 master 브랜치와 develop 브랜치가 있다.
+
+#### 제품으로 출시될 수 있는 master branch
+
+제품으로 출시될 수 있는 브랜치다. 사용자에게 배포 가능한 상태만을 관리해야 한다. 배포를 관리하기 위한 브랜치이므로 함부로 master 브랜치에 병합(merge) 하지 않는다. 항상 master 브랜치에서 작업하고 있는 건 아닌지 확인한다.
+
+#### 다음 출시 버전을 개발하는 develop branch 
+
+기능 개발을 위한 브랜치들을 병합하기 위해 사용한다. 모든 기능이 추가되고 버그가 수정되어 배포 가능한 안정적인 상태라면 develop 브랜치를 mater 브랜치에 merge(병합)한다. 평소에는 이 브랜치를 기반으로 개발을 진행한다. 
+
+### Supporting branch
+
+팀원간 브랜치를 나눠 개발을 할 경우 supproting 브랜치들을 이용한다. 메인 브랜치와 달리 개발이 끝난 후 제거된다.
+
+#### 기능을 개발하는 feature branch
+
+
+feature 브랜치는 새로운 기능 개발 및 버그 수정이 필요할 때마다 develop 브랜치로부터 분기한다. feature 브랜치에서의 작업은 기본적으로 공유할 필요가 없기 때문에 자신의 로컬 저장소에서 관리한다. 개발이 완료되면 develop 브랜치로 merge하여 다른 사람들과 공유한다. 
+
+**develop 브랜치에서 새로운 기능 개발을 위해 feature 브랜치를 분기 -> 새로운 기능에 대한 작업을 수행 -> 작업이 끝나면 develop 브랜치로 merge -> 더 이상 필요하지 않은 feature 브랜치는 삭제**
+
+
+어떤 이름도 가능하다. 단, master, develop, release-..., hotfix-... 같은 이름은 사용할 수 없다.
+
+feature/기능요약 형식으로 관리한다. 
+ex) feature/comment
+  
+####  출시 버전을 준비하는 release branch
+
+release 브랜치는 배포를 위한 최종적인 버그 수정, 문서 추가 등 배포와 직접적으로 관련된 작업을 수행한다. 이러한 작업들 이외에 release 브랜치에 새로운 기능을 추가로 merge하지 않는다
+
+**develop 브랜치에서 배포 작업을 위해 release 브랜치를 분기 -> master 브랜치에 merge -> develop 브랜치에 merge**
+
+release-RB_... 또는 release-... 또는 release/...같은 이름이 일반적이다.  
+ex) realease-1.1
+
+#### 출시 버전에서 발생한 버그를 수정하는 hotfix branch
+
+배포한 버전에 긴급하게 수정을 해야 할 필요가 있을 경우, master 브랜치에서 분기하는 브랜치다. develop 브랜치에서 문제가 되는 부분을 수정하여 배포 가능한 버전을 만들기에는 시간도 많이 소요되고 안정성을 보장하기도 어려우므로 바로 배포가 가능한 master 브랜치에서 직접 브랜치를 만들어 필요한 부분만 수정한 후 다시 master 브랜치에 병합하여 이를 배포한다.
+
+**배포한 버전에 긴급하게 수정할 부분 발생 -> master브랜치에서 hotfix브랜치 분기 -> 문제가 되는 부분 수정후 master브랜치에 merge -> develop 브랜치에 merge**
+
+hotfix-... 와 같은 이름이 일반적이다.  
+ex) hotfix-1.2.1 
+
 ## clone, push, pull 
 
 ### 브랜치 목록 조회
@@ -185,11 +267,8 @@ git push origin <branch-name>
 
 ### pull
 
-로컬에서 작업하면서 clone 또는 pull 을 이용해 remote 브랜치를 가져오는 경우가 있다. 이때 원하는 저장소의 브랜치를 가져오고 싶다면 `-t` 옵션과 원격 저장소의 branch 이름을 입력한다. 로컬에 동일한 이름의 브랜치가 생성되고 해당 브랜치로 checkout 된다. 
+pull 명령어는 원격 저장소의 소스를 가져온다. 해당 소스가 현재 내 소스보다 더 최신 버전이라고 하면 지금의 버전을 해당 소스에 맞춰 올린다. merge 명령어를 사용하는 것이다.
 
-```bash
-git checkout -t <origin-branch-name>
-```
 
 다른 브랜치에서 pull 을 받는 것은 merge 하는 것과 동일하다는 것에 주의하자. 
 ```bash
@@ -197,13 +276,9 @@ git checkout -t <origin-branch-name>
 git pull origin develop
 ``` 
 
+### remote 에 업로드한 파일 삭제
 
-
-
-
-
-
-
+local 에서 해당 파일을 삭제한 뒤 add, commit 후 remote 에 push
 
 
 
