@@ -79,41 +79,78 @@ modified : 커밋 후 코드를 변경한 상태
 ### 브랜치 만들기 및 이동
 ```bash
 # 브랜치 생성
-git branch <branch-name>
+$ git branch <branch-name>
 # 브랜치 생성 후 해당 브랜치로 이동
-git checkout -b <branch-name>
+$ git checkout -b <branch-name>
 # 브랜치 내역 확인
-git branch
+$ git branch
 # 이미 존재하는 브랜치로 이동
-git checkout <branch-name>
+$ git checkout <branch-name>
 ```
 
 브랜치 내에서 작업 add, commit 후 병합한다.
+
+### 브랜치 목록 조회
+
+로컬에 있는 브랜치 목록을 조회한다. 
+```bash
+$ git branch
+``` 
+remote 저장소에 있는 브랜치 목록을 조회한다
+```bash
+$ git branch -r
+```
+모든 브랜치 목록을 조회한다.
+```bash
+$ git branch -a
+```
 
 ### remote 에서 브랜치 받아오기
 
 원격 저장소에서 작업을 한 이후에 로컬에 받아오기 위해서 git pull 명령을 사용한다. 하지만 원격 저장소에서 새로운 Branch를 생성하였을 경우에는 git pull 명령을 통해서도 Branch 정보를 받아올 수 없다. 이 경우에는 git pull이 아닌 다음의 명령을 수행한다.
 ```bash
-git remote update
+$ git remote update
 ``` 
 이때 원하는 저장소의 브랜치만 가져오고 싶다면 `-t` 옵션과 원격 저장소의 branch 이름을 입력한다. 로컬에 동일한 이름의 브랜치가 생성되고 해당 브랜치로 checkout 된다. 
 
 ```bash
-git checkout -t <origin-branch-name>
+$ git checkout -t <origin-branch-name>
 ```
+
+### 브랜치 이름 변경
+
+로컬에 있는 브랜치 이름을 변경하려면 git branch의 m 옵션을 사용한다
+```bash
+$ git branch -m <old-name> <new-name>
+``` 
+원격 저장소의 브랜치 이름을 변경하려면 로컬에서 브랜치 이름 변경한 후 새로운 이름의 브랜치로 push 한다. 원격 저장소를 확인해보면 새로운 이름의 브랜치가 하나 늘어난 것을 확인할 수 있다. 예전 이름 브랜치를 `--delete` 옵션을 통해 삭제하면 이름이 변경된 효과를 얻을 수 있다. 
+```bash
+$ git push origin -u <new-name>
+$ git push origin --delete <old-name>
+``` 
+
+원격 저장소의 기본 브랜치 이름을 변경하고 싶을 경우 `Settings -> Branches` 메뉴에 들어가 이름을 변경한다. 로컬에 저장소의 이름도 같이 바꿔줘야 한다.
+```bash
+git branch -m <old-name> <new-name>
+git fetch origin
+git branch -u origin/<new-name> <new-name>
+```
+
+ 
+
 
 ### HEAD 
 
 HEAD 는 현재 작업트리가 어떤 버전을 기반으로 작업중인지 가리킨다. 작업 트리란 현재 작업중인 폴더를 의미한다. 작업트리에서 변경 내용을 add 하고 commit 한다.
 다음 명령어로 커밋 내역을 확인해 보자
 ```bash
-git long --oneline
+$ git long --oneline
 ```
 
 ex) git log --oneline 으로 HEAD 를 조회해보았을때 다음과 같이 나타났다고 하자.
 HEAD 가 가리키는 master 브랜치에서 first 커밋을 기반으로 작업중이다. 여기서 커밋 해시는 57ce9e0 이고 커밋메시지는 first 다. 
 ```bash 
-57ce9e0 (HEAD -> master) first 
+$ 57ce9e0 (HEAD -> master) first 
 ``` 
 
 
@@ -123,37 +160,37 @@ HEAD 가 가리키는 master 브랜치에서 first 커밋을 기반으로 작업
 
 별도 옵션 없이 명령을 실행하면 저장소의 커밋 히스토리를 시간순으로 보여준다.
 ```bash
-git log
+$ git log
 ```  
 `--patch` 옵션은 각 커밋의 diff 결과를 보여준다.`-p` 로 축약해 사용 가능하다. 
 ```bash
-git log -p
+$ git log -p
 ```  
 `stat` 옵션으로 각 커밋이 어떤 파일에서 몇 줄을 추가 또는 삭제했는지를 확인할 수 있다. 
 ```bash
-git log
+$ git log
 ```  
 `--graph` 옵션을 이용해 모든 브랜치의 분기점 및 최근 커밋내역을 그래프로 확인할 수 있다. 
 ```bash
-git log --oneline --branches --graph
+$ git log --oneline --branches --graph
 ```
 `--branches` 옵션을 이용하면 현재 위치한 브랜치의 커밋내역 뿐만 아니라 다른 브랜치의 커밋내역도 같이 보여준다. 개인적으로 `--oneline` 옵션과 같이 사용하면 한눈에 보기 편하다. 
 ```bash
-git log
+$ git log
 ```  
 ### merge
 
 작업이 완료되었다면 merge 할 수 있다. merge 하고 싶은 브랜치로 이동해 merge 할 대상 브랜치를 지정하는게 핵심이다.
 ```bash
 # 브랜치 이동
-git checkout <branch-name>
+$ git checkout <branch-name>
 # merge
-git merge <branch-name>
+$ git merge <branch-name>
 ``` 
 ex) main 브랜치에 dev 브랜치를 merge 한다.
 ```bash
-git checkout main
-git merge dev
+$ git checkout main
+$ git merge dev
 ``` 
 
 merge 는 항상 성공하는 명령어는 아니다. merge 도중 브랜치들에서 동일 부분을 서로 다르게 수정했다면 conflict 가 발생한다. 이 경우 자동으로 merge 가 되지 않는다. 생각해보면 다른사람이 이미 변경해 놓은 내용을 상의없이 내 코드로 덮어쓰는 것이니, 자동으로 merge 되면 위험한 것이다.  
@@ -161,14 +198,14 @@ merge 는 항상 성공하는 명령어는 아니다. merge 도중 브랜치들�
 
 merge 도중 conflict 가 일어났을때 merge 를 원하지 않는다면  취소할 수 있다. 
 ```bash
-git merge --abort
+$ git merge --abort
 ```
 
 ### 브랜치 삭제
 
 병합이 끝났거나 더 이상 해당 브랜치가 필요가 없다 판단되면 삭제한다. 
 ```bash
-git branch -D <branch-name>
+$ git branch -D <branch-name>
 ```
 
 ## 브랜치 종류
@@ -222,27 +259,12 @@ ex) hotfix-1.2.1
 
 ## clone, push, pull 
 
-### 브랜치 목록 조회
-
-로컬에 있는 브랜치 목록을 조회한다. 
-```bash
-git branch
-``` 
-remote 저장소에 있는 브랜치 목록을 조회한다
-```bash
-git branch -r
-```
-모든 브랜치 목록을 조회한다.
-```bash
-git branch -a
-```
-
 ### clone
 
 저장소 주소를 클립보드에 복사한 후 해당 저장소 코드가 위치하길 바라는 곳에서 터미널에 다음을 입력한다. 
 ex) 
 ```bash
-git clone git@github.com:Ywoosang/git-github.git
+$ git clone git@github.com:Ywoosang/git-github.git
 ```
 이때 해당 브랜치의 코드만 remote 에서 가져오는 것이다.   
 필요한 브랜치가 있다면 추가로 원격 브랜치 목록을 조회하고 가져온다. 
@@ -251,18 +273,18 @@ git clone git@github.com:Ywoosang/git-github.git
 
 지역 저장소의 브랜치를 원격 저장소 브랜치에 연결한다. 처음 push 할 때 한 번만 사용한다. 
 ```bash 
-git push -u origin <branch-name>
+$ git push -u origin <branch-name>
 ``` 
 다음은 로컬에서 커밋을 진행하고 push 로 remote 에 업로드한다. 
 
 ```bash
-git push
+$ git push
 ``` 
 
 
 로컬에서 만든 브랜치를 remote 에 추가할 수 있다. 기본적으로 로컬에서 브랜치를 만들면 remote 에 추가가 되지 않으므로 추가를 원한다면 직접 올린다. 
 ```bash
-git push origin <branch-name> 
+$ git push origin <branch-name> 
 ```
 
 ### pull
@@ -273,12 +295,14 @@ pull 명령어는 원격 저장소의 소스를 가져온다. 해당 소스가 �
 다른 브랜치에서 pull 을 받는 것은 merge 하는 것과 동일하다는 것에 주의하자. 
 ```bash
 # master 브랜치에서 develop 브랜치를 pull 한다.
-git pull origin develop
+$ git pull origin develop
 ``` 
 
 ### remote 에 업로드한 파일 삭제
 
-local 에서 해당 파일을 삭제한 뒤 add, commit 후 remote 에 push
+local 에서 해당 파일을 삭제한 뒤 add, commit 후 remote 에 push 한다.
+
+### 
 
 
 
